@@ -1,6 +1,9 @@
 # Packages
 node_modules
+
+# Specific Files
 config.json
+database.db
 
 # Log files
 logs
