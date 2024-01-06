@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS groups(
     serverid TEXT NOT NULL,
     groupid INTEGER NOT NULL,
     groupname TEXT NOT NULL,
+    state INTEGER DEFAULT 0,
     created DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (serverid, groupid)
     FOREIGN KEY (serverid) REFERENCES servers(serverid)

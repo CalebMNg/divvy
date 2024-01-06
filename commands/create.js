@@ -11,7 +11,7 @@ const { openDb } = require("../handlers/databaseHandler.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("creategroup")
+    .setName("create")
     .setDescription("Creates a group as an embeded message.")
     .addStringOption((option) =>
       option
@@ -37,7 +37,9 @@ module.exports = {
     if (!description) description = "This is the default description.";
     const groupname = interaction.options.getString("name");
 
-    let embeded = new EmbedBuilder().setTitle(groupname).setDescription(description)
+    let embeded = new EmbedBuilder()
+      .setTitle(groupname)
+      .setDescription(description);
 
     const response = await interaction.reply({
       embeds: [embeded],
@@ -51,9 +53,14 @@ module.exports = {
     let db = await openDb();
 
     //add group to groups table
-    const groupid = (await db.get("SELECT COUNT(groupid) AS count FROM groups"))
-      .count;
-    let sql = "INSERT INTO groups (serverid, groupid, groupname) VALUES (?, ?, ?)";
+    const groupid = (
+      await db.get(
+        "SELECT COUNT(groupid) AS count FROM groups WHERE serverid = ?",
+        [interaction.guild.id]
+      )
+    ).count;
+    let sql =
+      "INSERT INTO groups (serverid, groupid, groupname) VALUES (?, ?, ?)";
     await db.run(sql, [interaction.guild.id, groupid, groupname]);
 
     //join people
