@@ -34,21 +34,11 @@ module.exports = {
     const row = new ActionRowBuilder().addComponents(confirm);
 
     let description = interaction.options.getString("description");
-    if (!description) description = "This is the default description.";
     const groupname = interaction.options.getString("name");
 
-    let embeded = new EmbedBuilder()
-      .setTitle(groupname)
-      .setDescription(description);
+    let embed = new EmbedBuilder().setTitle(groupname);
 
-    const response = await interaction.reply({
-      embeds: [embeded],
-      components: [row],
-    });
-
-    const collector = response.createMessageComponentCollector({
-      componentType: ComponentType.Button,
-    });
+    if (description) embed.setDescription(description);
 
     let db = await openDb();
 
@@ -63,7 +53,23 @@ module.exports = {
       "INSERT INTO groups (serverid, groupid, groupname) VALUES (?, ?, ?)";
     await db.run(sql, [interaction.guild.id, groupid, groupname]);
 
-    //join people
+    //embed.setFooter({text: 'id: ' + groupid.toString()}); //footer to show id
+
+    const response = await interaction.reply({
+      embeds: [embed],
+      components: [row],
+    });
+
+    interaction.followUp({
+      content: "Group id: " + groupid.toString() + '. Use /history to see all past groups and ids.',
+      ephemeral: true,
+    });
+
+    const collector = response.createMessageComponentCollector({
+      componentType: ComponentType.Button,
+    });
+
+    //get responses
     collector.on("collect", async (i) => {
       let sql =
         "SELECT 1 FROM groupusers WHERE serverid = ? AND groupid = ? AND userid = ?";

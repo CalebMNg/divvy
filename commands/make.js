@@ -50,7 +50,7 @@ module.exports = {
     //invalid groupid
     if (!groupdata) {
       await interaction.reply({
-        content: "This group ID does not exist.",
+        content: "This group ID does not exist. Use /history to see all past groups and ids.",
         ephemeral: true,
       });
       return;
