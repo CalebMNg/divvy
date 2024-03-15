@@ -61,7 +61,7 @@ module.exports = {
     });
 
     interaction.followUp({
-      content: "Group id: " + groupid.toString() + '. Use /history to see all past groups and ids.',
+      content: "id: " + groupid.toString() + '. Use /history to see all past groups and ids.',
       ephemeral: true,
     });
 
